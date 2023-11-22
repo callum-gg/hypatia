@@ -49,3 +49,14 @@ tonerLayer.alpha = 0.3;
 tonerLayer.brightness = 3;
 tonerLayer.contrast = 0.7;
 
+var redSphere = viewer.entities.add({name : '', position: Cesium.Cartesian3.fromDegrees(28.78380051337822, 17.5360501497213, 351695.0), ellipsoid : {radii : new Cesium.Cartesian3(30000.0, 30000.0, 30000.0), material : Cesium.Color.BLACK.withAlpha(1),}});
+
+
+viewer.camera.flyTo({
+        	destination : Cesium.Cartesian3.fromDegrees(19.57, 10.32, 20000000.0), // default - africa
+    	});
+viewer.resolutionScale = window.devicePixelRatio;
+
+</script>
+</body>
+</html>
