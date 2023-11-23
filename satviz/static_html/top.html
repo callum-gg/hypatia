@@ -1,51 +1,51 @@
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <script src="https://cesium.com/downloads/cesiumjs/releases/1.111/Build/Cesium/Cesium.js"></script>
-  <link href="https://cesium.com/downloads/cesiumjs/releases/1.111/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
-</head>
-<body>
-  <div id="cesiumContainer" style="width: 100%; height:100%"></div>
-  <div id="satellite-data" style="position: absolute; top: 0; left: 0; width: 200px; height: 400px; border: 2px solid black;"></div>
-  <script>
-    Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJkODA1MTgxMy1jMjc2LTQ1YjQtYWRiOC1hNGQ1MTk0YTQ3ODciLCJpZCI6MTc5MTIxLCJpYXQiOjE3MDAyNDU5Njl9.dDlSaBCm4TGyEvlbU48mcfrF1vSr4TeQgS1zQyNGrp4';
-    var viewer = new Cesium.Viewer('cesiumContainer', {
-    skyBox : false,
-    skyAtmosphere: false,
-    baseLayerPicker: false,
-    geocoder: false,
-    homeButton: false,
-    infoBox: false,
-    sceneModePicker: false,
-    navigationHelpButton: false,
-    shouldAnimate : true,
-    contextOptions : {
-        webgl: {
-            alpha: true
-        }
-    }
-});
+    <head>
+        <meta charset="utf-8">
+        <script src="https://cesium.com/downloads/cesiumjs/releases/1.111/Build/Cesium/Cesium.js"></script>
+        <link href="https://cesium.com/downloads/cesiumjs/releases/1.111/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    </head>
+    <body>
+        <div id="cesiumContainer" style="width: 100%; height:100%"></div>
+        <div id="satellite-data" style="position: absolute; top: 0; left: 0; width: 200px; height: 400px; border: 2px solid black;"></div>
+        <script type="module">
+            Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJkODA1MTgxMy1jMjc2LTQ1YjQtYWRiOC1hNGQ1MTk0YTQ3ODciLCJpZCI6MTc5MTIxLCJpYXQiOjE3MDAyNDU5Njl9.dDlSaBCm4TGyEvlbU48mcfrF1vSr4TeQgS1zQyNGrp4';            
+            var viewer = new Cesium.Viewer('cesiumContainer', {
+                skyBox : false,
+                skyAtmosphere: false,
+                baseLayerPicker: false,
+                geocoder: false,
+                homeButton: false,
+                infoBox: false,
+                sceneModePicker: false,
+                navigationHelpButton: false,
+                shouldAnimate : true,
+                contextOptions : {
+                    webgl: {
+                        alpha: true
+                    }
+                }
+            });
 
-var scene = viewer.scene;
-scene.backgroundColor = Cesium.Color.WHITE;
-scene.highDynamicRange = false;
-var canvas = viewer.canvas;
-canvas.setAttribute('tabindex', '0'); // needed to put focus on the canvas
-canvas.onclick = function() {
-    canvas.focus();
-};
-var ellipsoid = scene.globe.ellipsoid;
-var globe = viewer.scene.globe;
-globe.imageryLayers.removeAll();
-globe.baseColor = Cesium.Color.fromCssColorString('#f7fbff');
+            var scene = viewer.scene;
+            scene.backgroundColor = Cesium.Color.WHITE;
+            scene.highDynamicRange = false;
+            var canvas = viewer.canvas;
+            canvas.setAttribute('tabindex', '0'); // needed to put focus on the canvas
+            canvas.onclick = function() {
+                canvas.focus();
+            };
+            var ellipsoid = scene.globe.ellipsoid;
+            var globe = viewer.scene.globe;
+            // globe.imageryLayers.removeAll();
+            // globe.baseColor = Cesium.Color.fromCssColorString('#f7fbff');
 
-var tonerLayer = globe.imageryLayers.addImageryProvider(
-    new Cesium.OpenStreetMapImageryProvider({
-        // url : 'https://stamen-tiles.a.ssl.fastly.net/toner-background/',
-        // credit : 'Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under CC BY SA.'
-    })
-);
-tonerLayer.alpha = 0.3;
-tonerLayer.brightness = 3;
-tonerLayer.contrast = 0.7;
+            var tonerLayer = globe.imageryLayers.addImageryProvider(
+                new Cesium.OpenStreetMapImageryProvider({
+                    // url : 'https://stamen-tiles.a.ssl.fastly.net/toner-background/',
+                    // credit : 'Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under CC BY SA.'
+                })
+            );
+            tonerLayer.alpha = 0.3;
+            tonerLayer.brightness = 3;
+            tonerLayer.contrast = 0.7;
 

@@ -1,6 +1,11 @@
+# - Show basic data in div
+# - Get groundstation locations
+# - Enhance Literature Review
+# - Start writing methodology chapter
+
 # Setting home directory for running
 import os
-os.chdir("C:/Users/callu/Documents/hypatia")
+os.chdir("T:/ahhh/L3/Project/hypatia")
 
 import sys
 sys.path.append("satviz/scripts")
@@ -10,12 +15,13 @@ from get_satellites_data import GetSatellitesData
 def GenerateSatelliteJavascript(satellites):
     viz_string = ""
     for j in range(len(satellites)):
-        viz_string += "var redSphere = viewer.entities.add({name : '', position: Cesium.Cartesian3.fromDegrees(" \
-                        + str(satellites[j]["LONGITUDE"]) + ", " \
-                        + str(satellites[j]["LATITUDE"]) + ", " + str(
-            (float(satellites[j]["APOAPSIS"]) + float(satellites[j]["APOAPSIS"])) * 500) + "), " \
-                        + "ellipsoid : {radii : new Cesium.Cartesian3(30000.0, 30000.0, 30000.0), " \
-                        + "material : Cesium.Color.BLACK.withAlpha(1),}});\n"
+        if str(satellites[j]["LONGITUDE"]) != "nan" and str(satellites[j]["LATITUDE"]) != "nan":
+            viz_string += "var redSphere = viewer.entities.add({name : '', position: Cesium.Cartesian3.fromDegrees(" \
+                            + str(satellites[j]["LONGITUDE"]) + ", " \
+                            + str(satellites[j]["LATITUDE"]) + ", " + str(
+                (float(satellites[j]["APOAPSIS"]) + float(satellites[j]["APOAPSIS"])) * 500) + "), " \
+                            + "ellipsoid : {radii : new Cesium.Cartesian3(30000.0, 30000.0, 30000.0), " \
+                            + "material : Cesium.Color.BLACK.withAlpha(1),}});\n"
 
     # for key in orbit_links:
     #     sat1 = orbit_links[key]["sat1"]
@@ -30,6 +36,9 @@ def GenerateSatelliteJavascript(satellites):
     #                     + "width: 0.5, arcType: Cesium.ArcType.NONE, " \
     #                     + "material: new Cesium.PolylineOutlineMaterialProperty({ " \
     #                     + "color: Cesium.Color."+COLOR[i]+".withAlpha(0.4), outlineWidth: 0, outlineColor: Cesium.Color.BLACK})}});"
+
+    # Code for displaying additional data
+    viz_string += "document.getElementById('satellite-data').innerText = 'Number of Satellites: " + str(len(satellites)) + "'"
 
     return viz_string
 
