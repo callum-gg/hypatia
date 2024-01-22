@@ -1,11 +1,11 @@
 def GenerateSatelliteJavascript(satellites):
-    viz_string = ""
+    satellites_string = ""
     for j in range(len(satellites)):
         if str(satellites[j]["LONGITUDE"]) != "nan" and str(satellites[j]["LATITUDE"]) != "nan":
-            viz_string += "var redSphere = viewer.entities.add({name : '', position: Cesium.Cartesian3.fromDegrees(" \
+            satellites_string += "var satelliteSphere = viewer.entities.add({name : '', position: Cesium.Cartesian3.fromDegrees(" \
                             + str(satellites[j]["LONGITUDE"]) + ", " \
                             + str(satellites[j]["LATITUDE"]) + ", " + str(
-                (float(satellites[j]["APOAPSIS"]) + float(satellites[j]["APOAPSIS"])) * 500) + "), " \
+                (float(satellites[j]["APOAPSIS"]) + float(satellites[j]["PERIAPSIS"])) * 500) + "), " \
                             + "ellipsoid : {radii : new Cesium.Cartesian3(30000.0, 30000.0, 30000.0), " \
                             + "material : Cesium.Color.BLACK.withAlpha(1),}});\n"
             
@@ -14,7 +14,7 @@ def GenerateSatelliteJavascript(satellites):
     # for key in orbit_links:
     #     sat1 = orbit_links[key]["sat1"]
     #     sat2 = orbit_links[key]["sat2"]
-    #     viz_string += "viewer.entities.add({name : '', polyline: { positions: Cesium.Cartesian3.fromDegreesArrayHeights([" \
+    #     satellites_string += "viewer.entities.add({name : '', polyline: { positions: Cesium.Cartesian3.fromDegreesArrayHeights([" \
     #                     + str(math.degrees(sat_objs[sat1]["sat_obj"].sublong)) + "," \
     #                     + str(math.degrees(sat_objs[sat1]["sat_obj"].sublat)) + "," \
     #                     + str(sat_objs[sat1]["alt_km"] * 1000) + "," \
@@ -26,10 +26,20 @@ def GenerateSatelliteJavascript(satellites):
     #                     + "color: Cesium.Color."+COLOR[i]+".withAlpha(0.4), outlineWidth: 0, outlineColor: Cesium.Color.BLACK})}});"
 
     # Code for displaying additional data
-    viz_string += "document.getElementById('satellite-data').innerText = 'Number of Satellites: " + str(len(satellites)) + "'"
+    satellites_string += "document.getElementById('satellite-data').innerText = 'Number of Satellites: " + str(len(satellites)) + "';\n"
     # Number of active satellites
 
-    return viz_string
+    return satellites_string
 
 def GenerateGroundStationJavascript(groundstations):
-    return ""
+    groundstations_string = ""
+    for i in range(0, len(groundstations)):
+        groundstations_string += "var groundstationSphere = viewer.entities.add({name : '', position: Cesium.Cartesian3.fromDegrees(" \
+                        + str(groundstations[i]["LONGITUDE"]) + ", " \
+                        + str(groundstations[i]["LATITUDE"]) + ", 0), " \
+                        + "ellipsoid : {radii : new Cesium.Cartesian3(30000.0, 30000.0, 30000.0), " \
+                        + "material : Cesium.Color.RED.withAlpha(1),}});\n"
+
+    groundstations_string += "\ndocument.getElementById('satellite-data').innerText += '\\nNumber of Ground Stations: " + str(len(groundstations)) + "';\n"
+    
+    return groundstations_string
