@@ -2,3 +2,4 @@
 *.pyc
 dev_testing/
 .env
+satviz/viz_output/output.html
