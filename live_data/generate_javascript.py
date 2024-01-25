@@ -2,7 +2,7 @@ def GenerateSatelliteJavascript(satellites):
     satellites_string = ""
     for j in range(len(satellites)):
         if str(satellites[j]["LONGITUDE"]) != "nan" and str(satellites[j]["LATITUDE"]) != "nan":
-            satellites_string += "var satelliteSphere = viewer.entities.add({name : '', position: Cesium.Cartesian3.fromDegrees(" \
+            satellites_string += "var satelliteSphere = viewer.entities.add({name : '" + satellites[j]["OBJECT_NAME"] + "', position: Cesium.Cartesian3.fromDegrees(" \
                             + str(satellites[j]["LONGITUDE"]) + ", " \
                             + str(satellites[j]["LATITUDE"]) + ", " + str(
                 (float(satellites[j]["APOAPSIS"]) + float(satellites[j]["PERIAPSIS"])) * 500) + "), " \
