@@ -1,9 +1,57 @@
-
-
+<html>
+    <body>
+        <script>
 			viewer.camera.flyTo({
 			 	destination : Cesium.Cartesian3.fromDegrees(19.57, 10.32, 20000000.0), // default - africa
 			});
 			viewer.resolutionScale = window.devicePixelRatio;
+
+			function ShowSatelliteData(name) {
+                var div = document.getElementById('select-data');
+                div.innerHTML = '';
+
+                if (!name) {return;}
+
+                var satellite = document.createElement("div");
+                satellite.innerHTML = name;
+                div.appendChild(satellite);
+
+                if (name === "GROUNDSTATION") {return;}
+
+                for (let i=0; i<satellite_data.length; i++) {
+                    if (satellite_data[i].OBJECT_NAME === name) {
+                        var latitude = document.createElement("div");
+                        latitude.innerHTML = "Latitude: " + satellite_data[i].LATITUDE;
+                        div.appendChild(latitude);
+
+                        var longitude = document.createElement("div");
+                        longitude.innerHTML = "Longitude: " + satellite_data[i].LONGITUDE;
+                        div.appendChild(longitude);
+
+                        var launch = document.createElement("div");
+                        launch.innerHTML = "Launched: " + satellite_data[i].LAUNCH_DATE;
+                        div.appendChild(launch);
+                        break;
+                    }
+                }
+            }
+
+            function GenerateSatellitePosition(satellite, t) {
+                // satellite - element from satellite_data
+                // t - relative time value from current state
+                
+            }
+
+			viewer.selectedEntityChanged.addEventListener(function(selectedEntity) {
+				if (Cesium.defined(selectedEntity)) {
+					// console.log('Selected ' + selectedEntity.name);
+					ShowSatelliteData(selectedEntity.name);
+				} else {
+					// console.log("Deselected Entity");
+					ShowSatelliteData();
+				}
+			});
+			
 
 		</script>
 	</body>

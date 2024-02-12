@@ -27,12 +27,12 @@ if resp.status_code != 200 or resp.text == "{\"Login\":\"Failed\"}":
 else:
     logged_in = True
 
-def GetSatellitesData():
+def GetSatellitesData(object_name):
     if not logged_in:
         return
     # Could change to only return necessary data (speed up requests?)
-    resp = session.get("https://www.space-track.org/basicspacedata/query/class/gp/OBJECT_NAME/STARLINK-%5E")
-    # resp = session.get("https://www.space-track.org/basicspacedata/query/class/gp/OBJECT_NAME/STARLINK-%5E/limit/1")
+    # resp = session.get("https://www.space-track.org/basicspacedata/query/class/gp/OBJECT_NAME/" + object_name + "-%5E")
+    resp = session.get("https://www.space-track.org/basicspacedata/query/class/gp/OBJECT_NAME/" + object_name + "-%5E/limit/100")
 
     # Error handling
     satellites = json.loads(resp.text)
@@ -42,8 +42,18 @@ def GetSatellitesData():
     for i in range(0, len(satellites)):
         # Need to adjust for time data was taken from
         # And adjust current values as well
-        satellite = EarthSatellite(satellites[i]["TLE_LINE1"], satellites[i]["TLE_LINE2"])#, ts=)
+        satellite = EarthSatellite(satellites[i]["TLE_LINE1"], satellites[i]["TLE_LINE2"])
         geocentric = satellite.at(time_now)
+        s_elapsed = (int(time_now.utc_strftime("%H")) * 60 + int(time_now.utc_strftime("%M"))) * 60 + int(time_now.utc_strftime("%S"))
+        new_time = "{:.8f}".format(round(float(time_now.utc_strftime("%y%j")) + float(s_elapsed / 86400)), 8) # hours + mins + seconds / seconds in a day
+        tle_line = satellites[i]["TLE_LINE1"][0:18] + new_time + satellites[i]["TLE_LINE1"][32:-1]
+        check_sum = 0
+        for j in range(0, len(tle_line)):
+            if tle_line[j] == "-":
+                check_sum += 1
+            elif tle_line[j].isnumeric():
+                check_sum += int(tle_line[j])
+        satellites[i]["TLE_LINE1"] = tle_line + str(check_sum % 10)
         lat, lon = wgs84.latlon_of(geocentric)
         satellites[i]["LATITUDE"], satellites[i]["LONGITUDE"] = lat.degrees, lon.degrees
 
@@ -57,8 +67,7 @@ def GetSatellitesData():
     return satellites
 
 if __name__ == "__main__":
-    GetSatellitesData()
+    GetSatellitesData("STARLINK")
 
 # Close session
-# Might cause issues?
 session.close()

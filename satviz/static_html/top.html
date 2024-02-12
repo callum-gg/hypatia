@@ -3,10 +3,53 @@
         <meta charset="utf-8">
         <script src="https://cesium.com/downloads/cesiumjs/releases/1.111/Build/Cesium/Cesium.js"></script>
         <link href="https://cesium.com/downloads/cesiumjs/releases/1.111/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+        <style>
+            #satellite-data {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 220px;
+                height: 400px;
+                border-right: 2px solid black;
+                border-bottom: 2px solid black;
+                background-color: white;
+                padding: 12px;
+                box-sizing: border-box;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+
+            #general-info {
+                display: flex;
+                gap: 10px;
+            }
+
+            #general-info > div:first-child {
+                flex-grow: 1;
+            }
+
+            #select-data {
+                margin-top: 10px;
+                padding-top: 10px;
+                border-top: 1px solid black;
+            }
+
+            #select-data > div:first-child {
+                font-weight: bold;
+            }
+        </style>
     </head>
     <body>
         <div id="cesiumContainer" style="width: 100%; height:100%"></div>
-        <div id="satellite-data" style="position: absolute; top: 0; left: 0; width: 200px; height: 400px; border: 2px solid black;"></div>
+        <div id="satellite-data">
+            <div id="general-info">
+                <div>
+                    <div># Satellites</div>
+                    <div># Ground Stations</div>
+                </div>
+                <div><div></div><div></div></div>
+            </div>
+            <div id="select-data"></div>
+        </div>
         <script type="module">
             Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJkODA1MTgxMy1jMjc2LTQ1YjQtYWRiOC1hNGQ1MTk0YTQ3ODciLCJpZCI6MTc5MTIxLCJpYXQiOjE3MDAyNDU5Njl9.dDlSaBCm4TGyEvlbU48mcfrF1vSr4TeQgS1zQyNGrp4';            
             var viewer = new Cesium.Viewer('cesiumContainer', {

@@ -1,3 +1,5 @@
+import simplejson as json
+
 def GenerateSatelliteJavascript(satellites):
     satellites_string = ""
     for j in range(len(satellites)):
@@ -26,20 +28,22 @@ def GenerateSatelliteJavascript(satellites):
     #                     + "color: Cesium.Color."+COLOR[i]+".withAlpha(0.4), outlineWidth: 0, outlineColor: Cesium.Color.BLACK})}});"
 
     # Code for displaying additional data
-    satellites_string += "document.getElementById('satellite-data').innerText = 'Number of Satellites: " + str(len(satellites)) + "';\n"
-    # Number of active satellites
+    satellites_string += "document.getElementById('general-info').children[1].children[0].innerText = '" + str(len(satellites)) + "';\n"
+    # Pass satellite data to JavaScript so can be shown in satellite info box
+
+    satellites_string += "const satellite_data = JSON.parse('" + json.dumps(satellites, ignore_nan=True) + "');\n"
 
     return satellites_string
 
 def GenerateGroundStationJavascript(groundstations):
     groundstations_string = ""
     for i in range(0, len(groundstations)):
-        groundstations_string += "var groundstationSphere = viewer.entities.add({name : '', position: Cesium.Cartesian3.fromDegrees(" \
+        groundstations_string += "var groundstationSphere = viewer.entities.add({name : 'GROUNDSTATION', position: Cesium.Cartesian3.fromDegrees(" \
                         + str(groundstations[i]["LONGITUDE"]) + ", " \
                         + str(groundstations[i]["LATITUDE"]) + ", 0), " \
                         + "ellipsoid : {radii : new Cesium.Cartesian3(30000.0, 30000.0, 30000.0), " \
                         + "material : Cesium.Color.RED.withAlpha(1),}});\n"
 
-    groundstations_string += "\ndocument.getElementById('satellite-data').innerText += '\\nNumber of Ground Stations: " + str(len(groundstations)) + "';\n"
+    groundstations_string += "document.getElementById('general-info').children[1].children[1].innerText = '" + str(len(groundstations)) + "';\n"
     
     return groundstations_string

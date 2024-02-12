@@ -43,17 +43,17 @@ def read_tles(filename_tles):
     with open(filename_tles, 'r') as f:
         n_orbits, n_sats_per_orbit = [int(n) for n in f.readline().split()]
         universal_epoch = None
-        i = 0
+        # i = 0
         for tles_line_1 in f:
             tles_line_2 = f.readline()
             tles_line_3 = f.readline()
 
             # Retrieve name and identifier
             name = tles_line_1
-            sid = int(name.split()[1])
-            if sid != i:
-                raise ValueError("Satellite identifier is not increasing by one each line")
-            i += 1
+            # sid = int(name.split()[1])
+            # if sid != i:
+            #     raise ValueError("Satellite identifier is not increasing by one each line")
+            # i += 1
 
             # Fetch and check the epoch from the TLES data
             # In the TLE, the epoch is given with a Julian data of yyddd.fraction

@@ -139,12 +139,12 @@ def generate_dynamic_state_at(
         # TODO: but practically, defining a permanent ISL between two satellites which
         # TODO: can go out of distance is generally unwanted
         sat_distance_m = distance_m_between_satellites(satellites[a], satellites[b], str(epoch), str(time))
-        if sat_distance_m > max_isl_length_m:
-            raise ValueError(
-                "The distance between two satellites (%d and %d) "
-                "with an ISL exceeded the maximum ISL length (%.2fm > %.2fm at t=%dns)"
-                % (a, b, sat_distance_m, max_isl_length_m, time_since_epoch_ns)
-            )
+        # if sat_distance_m > max_isl_length_m:
+        #     raise ValueError(
+        #         "The distance between two satellites (%d and %d) "
+        #         "with an ISL exceeded the maximum ISL length (%.2fm > %.2fm at t=%dns)"
+        #         % (a, b, sat_distance_m, max_isl_length_m, time_since_epoch_ns)
+        #     )
 
         # Add to networkx graph
         sat_net_graph_only_satellites_with_isls.add_edge(

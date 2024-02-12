@@ -22,7 +22,7 @@
 
 import sys
 import math
-from main_helper import MainHelper
+from main_helper import LiveHelper
 
 # WGS72 value; taken from https://geographiclib.sourceforge.io/html/NET/NETGeographicLib_8h_source.html
 EARTH_RADIUS = 6378135.0
@@ -31,6 +31,7 @@ EARTH_RADIUS = 6378135.0
 
 BASE_NAME = "starlink_550"
 NICE_NAME = "Starlink-550"
+OBJECT_NAME = "STARLINK"
 
 # STARLINK 550
 
@@ -61,25 +62,16 @@ INCLINATION_DEGREE = 53
 ################################################################
 
 
-main_helper = MainHelper(
+main_helper = LiveHelper(
     BASE_NAME,
     NICE_NAME,
-    ECCENTRICITY,
-    ARG_OF_PERIGEE_DEGREE,
-    PHASE_DIFF,
-    MEAN_MOTION_REV_PER_DAY,
-    ALTITUDE_M,
-    MAX_GSL_LENGTH_M,
-    MAX_ISL_LENGTH_M,
-    NUM_ORBS,
-    NUM_SATS_PER_ORB,
-    INCLINATION_DEGREE,
+    OBJECT_NAME,
 )
 
 
 def main():
     args = sys.argv[1:]
-    args = ["2", "1000", "isls_plus_grid", "ground_stations_top_100", "algorithm_free_one_only_over_isls", "1"]
+    args = ["2", "1000", "isls_none", "ground_stations_top_100", "algorithm_free_one_only_over_isls", "1"]
     if len(args) != 6:
         print("Must supply exactly six arguments")
         print("Usage: python main_starlink_550.py [duration (s)] [time step (ms)] "
@@ -96,7 +88,7 @@ def main():
             args[2],
             args[3],
             args[4],
-            int(args[5]),
+            int(args[5])
         )
 
 

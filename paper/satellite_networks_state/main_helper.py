@@ -24,37 +24,13 @@ import sys
 sys.path.append("../../satgenpy")
 import satgen
 import os
+from get_satellites_data import GetSatellitesData
+import math
+import statistics
 
-
-class MainHelper:
-
-    def __init__(
-            self,
-            BASE_NAME,
-            NICE_NAME,
-            ECCENTRICITY,
-            ARG_OF_PERIGEE_DEGREE,
-            PHASE_DIFF,
-            MEAN_MOTION_REV_PER_DAY,
-            ALTITUDE_M,
-            MAX_GSL_LENGTH_M,
-            MAX_ISL_LENGTH_M,
-            NUM_ORBS,
-            NUM_SATS_PER_ORB,
-            INCLINATION_DEGREE,
-    ):
-        self.BASE_NAME = BASE_NAME
-        self.NICE_NAME = NICE_NAME
-        self.ECCENTRICITY = ECCENTRICITY
-        self.ARG_OF_PERIGEE_DEGREE = ARG_OF_PERIGEE_DEGREE
-        self.PHASE_DIFF = PHASE_DIFF
-        self.MEAN_MOTION_REV_PER_DAY = MEAN_MOTION_REV_PER_DAY
-        self.ALTITUDE_M = ALTITUDE_M
-        self.MAX_GSL_LENGTH_M = MAX_GSL_LENGTH_M
-        self.MAX_ISL_LENGTH_M = MAX_ISL_LENGTH_M
-        self.NUM_ORBS = NUM_ORBS
-        self.NUM_SATS_PER_ORB = NUM_SATS_PER_ORB
-        self.INCLINATION_DEGREE = INCLINATION_DEGREE
+class ParentHelper:
+    def __init__(self):
+        pass
 
     def calculate(
             self,
@@ -93,17 +69,7 @@ class MainHelper:
 
         # TLEs
         print("Generating TLEs...")
-        satgen.generate_tles_from_scratch_manual(
-            output_generated_data_dir + "/" + name + "/tles.txt",
-            self.NICE_NAME,
-            self.NUM_ORBS,
-            self.NUM_SATS_PER_ORB,
-            self.PHASE_DIFF,
-            self.INCLINATION_DEGREE,
-            self.ECCENTRICITY,
-            self.ARG_OF_PERIGEE_DEGREE,
-            self.MEAN_MOTION_REV_PER_DAY
-        )
+        self.generate_tle(output_generated_data_dir + "/" + name + "/tles.txt")
 
         # ISLs
         print("Generating ISLs...")
@@ -145,7 +111,7 @@ class MainHelper:
         print("Generating GSL interfaces info..")
         satgen.generate_simple_gsl_interfaces_info(
             output_generated_data_dir + "/" + name + "/gsl_interfaces_info.txt",
-            self.NUM_ORBS * self.NUM_SATS_PER_ORB,
+            self.NUM_SATELLITES,
             len(ground_stations),
             gsl_interfaces_per_satellite,  # GSL interfaces per satellite
             1,  # (GSL) Interfaces per ground station
@@ -166,3 +132,115 @@ class MainHelper:
             dynamic_state_algorithm,
             True
         )
+
+class MainHelper(ParentHelper):
+
+    def __init__(
+            self,
+            BASE_NAME,
+            NICE_NAME,
+            ECCENTRICITY,
+            ARG_OF_PERIGEE_DEGREE,
+            PHASE_DIFF,
+            MEAN_MOTION_REV_PER_DAY,
+            ALTITUDE_M,
+            MAX_GSL_LENGTH_M,
+            MAX_ISL_LENGTH_M,
+            NUM_ORBS,
+            NUM_SATS_PER_ORB,
+            INCLINATION_DEGREE,
+    ):
+        self.BASE_NAME = BASE_NAME
+        self.NICE_NAME = NICE_NAME
+        self.ECCENTRICITY = ECCENTRICITY
+        self.ARG_OF_PERIGEE_DEGREE = ARG_OF_PERIGEE_DEGREE
+        self.PHASE_DIFF = PHASE_DIFF
+        self.MEAN_MOTION_REV_PER_DAY = MEAN_MOTION_REV_PER_DAY
+        self.ALTITUDE_M = ALTITUDE_M
+        self.MAX_GSL_LENGTH_M = MAX_GSL_LENGTH_M
+        self.MAX_ISL_LENGTH_M = MAX_ISL_LENGTH_M
+        self.NUM_ORBS = NUM_ORBS
+        self.NUM_SATS_PER_ORB = NUM_SATS_PER_ORB
+        self.INCLINATION_DEGREE = INCLINATION_DEGREE
+        self.NUM_SATELLITES = self.NUM_ORBS * self.NUM_SATS_PER_ORB
+
+    def generate_tle(self, file_path):
+        satgen.generate_tles_from_scratch_manual(
+            file_path,
+            self.NICE_NAME,
+            self.NUM_ORBS,
+            self.NUM_SATS_PER_ORB,
+            self.PHASE_DIFF,
+            self.INCLINATION_DEGREE,
+            self.ECCENTRICITY,
+            self.ARG_OF_PERIGEE_DEGREE,
+            self.MEAN_MOTION_REV_PER_DAY
+        )
+
+class LiveHelper(ParentHelper):
+    def __init__(
+            self,
+            BASE_NAME,
+            NICE_NAME,
+            OBJECT_NAME,
+    ):
+        self.BASE_NAME = BASE_NAME
+        self.NICE_NAME = NICE_NAME
+        self.OBJECT_NAME = OBJECT_NAME
+
+        self.SATELLITES = GetSatellitesData(self.OBJECT_NAME)
+        self.NUM_SATELLITES = len(self.SATELLITES)
+
+        SATELLITE_CONE_RADIUS_M = 940700
+        EARTH_RADIUS = 6378135.0
+        ALTITUDE_M = (float(self.SATELLITES[0]["APOAPSIS"]) + float(self.SATELLITES[0]["PERIAPSIS"])) * 500
+
+        self.MAX_GSL_LENGTH_M = math.sqrt(math.pow(SATELLITE_CONE_RADIUS_M, 2) + math.pow(ALTITUDE_M, 2))
+        self.MAX_ISL_LENGTH_M = 2 * math.sqrt(math.pow(EARTH_RADIUS + ALTITUDE_M, 2) - math.pow(EARTH_RADIUS + 80000, 2))
+
+        # Sort each satellite into its respective orbit
+        # orbits = []
+        # THRESHOLDS = {
+        #     "MEAN_MOTION": 1,
+        #     # "ECCENTRICITY": 0.0001,
+        #     "INCLINATION": 3,
+        #     "RA_OF_ASC_NODE": 3,
+        #     "ARG_OF_PERICENTER": 3,
+        #     "MEAN_ANOMALY": 3
+        # }
+        # for satellite in self.SATELLITES:
+        #     found_orbit = False
+        #     for orbit in orbits:
+        #         found_orbit = True
+        #         for key, threshold in THRESHOLDS.items():
+        #             if abs(float(satellite[key]) - orbit[key]) > threshold:
+        #                 found_orbit = False
+        #                 break
+        #         if found_orbit:
+        #             orbit["names"].append(satellite["OBJECT_NAME"])
+        #             break # prevents satellites from being added to multiple orbits
+        #     if not found_orbit:
+        #         new_orbit = {"names": [satellite["OBJECT_NAME"]]}
+        #         for key in THRESHOLDS:
+        #             new_orbit[key] = float(satellite[key])
+        #         orbits.append(new_orbit)
+
+        # Get average number (mean or mode?) of satellites per orbit
+        # Determine if any orbits are not proper (e.g. satellites just launched) and remove them
+        
+        # self.NUM_ORBS = len(orbits)
+        # print([len(orbit["names"]) for orbit in orbits])
+        # self.NUM_SATS_PER_ORB = statistics.mode([len(orbit["names"]) for orbit in orbits])
+
+        # Help
+        self.NUM_ORBS = 72
+        self.NUM_SATS_PER_ORB = 20
+
+    def generate_tle(self, file_path):
+        with open(file_path, "w+") as f_out:
+            f_out.write("%d %d\n" % (self.NUM_ORBS, self.NUM_SATS_PER_ORB))
+
+            for satellite in self.SATELLITES:
+                f_out.write(self.NICE_NAME + " " + satellite['OBJECT_NAME'][9:] + "\n")
+                f_out.write(satellite['TLE_LINE1'] + "\n")
+                f_out.write(satellite['TLE_LINE2'] + "\n")
