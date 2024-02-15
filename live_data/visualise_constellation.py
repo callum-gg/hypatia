@@ -11,13 +11,14 @@ os.chdir(os.getenv("DIRECTORY"))
 
 import sys
 sys.path.append("satviz/scripts")
+sys.path.append("paper/satellite_networks_state")
 
-from paper.satellite_networks_state.get_satellites_data import GetSatellitesData
+from get_satellites_data import GetSatellitesData
 from get_groundstations_data import GetGroundStationsData
 from generate_javascript import GenerateSatelliteJavascript, GenerateGroundStationJavascript
 
 # Get satellites data
-satellites = GetSatellitesData()
+satellites = GetSatellitesData("STARLINK")
 groundstations = GetGroundStationsData()
 
 # HTML output file writer

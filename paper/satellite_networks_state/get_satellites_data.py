@@ -31,8 +31,8 @@ def GetSatellitesData(object_name):
     if not logged_in:
         return
     # Could change to only return necessary data (speed up requests?)
-    # resp = session.get("https://www.space-track.org/basicspacedata/query/class/gp/OBJECT_NAME/" + object_name + "-%5E")
-    resp = session.get("https://www.space-track.org/basicspacedata/query/class/gp/OBJECT_NAME/" + object_name + "-%5E/limit/100")
+    resp = session.get("https://www.space-track.org/basicspacedata/query/class/gp/OBJECT_NAME/" + object_name + "-%5E")
+    # resp = session.get("https://www.space-track.org/basicspacedata/query/class/gp/OBJECT_NAME/" + object_name + "-%5E/limit/100")
 
     # Error handling
     satellites = json.loads(resp.text)
