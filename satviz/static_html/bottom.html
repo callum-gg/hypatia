@@ -29,6 +29,10 @@
                         var launch = document.createElement("div");
                         launch.innerHTML = "Launched: " + satellite_data[i].LAUNCH_DATE;
                         div.appendChild(launch);
+                        
+                        var altitude = document.createElement("div");
+                        altitude.innerHTML = "Altitude: " + satellite_data[i].ALTITUDE;
+                        div.appendChild(altitude);
                         break;
                     }
                 }
