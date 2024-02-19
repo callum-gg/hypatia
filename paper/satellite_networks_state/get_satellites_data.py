@@ -32,8 +32,14 @@ def GetSatellitesData(object_name):
     if not logged_in:
         print("Session not valid")
         return
+    # Filters (can be passed as arguments to function)
+    start_date = "2000-01-01" # YYYY-MM-DD
+    end_date = "now" # YYYY-MM-DD
+
     # Could change to only return necessary data (speed up requests?)
-    resp = session.get("https://www.space-track.org/basicspacedata/query/class/gp/OBJECT_NAME/" + object_name + "-%5E")
+    resp = session.get("https://www.space-track.org/basicspacedata/query/class/gp/LAUNCH_DATE/" \
+        + start_date + "--" \
+        + end_date + "/OBJECT_NAME/" + object_name + "-%5E")
     # resp = session.get("https://www.space-track.org/basicspacedata/query/class/gp/OBJECT_NAME/" + object_name + "-%5E/limit/100")
 
     # Error handling
