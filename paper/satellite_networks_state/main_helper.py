@@ -199,48 +199,56 @@ class LiveHelper(ParentHelper):
         self.MAX_ISL_LENGTH_M = 2 * math.sqrt(math.pow(EARTH_RADIUS + ALTITUDE_M, 2) - math.pow(EARTH_RADIUS + 80000, 2))
 
         # Sort each satellite into its respective orbit
-        # orbits = []
-        # THRESHOLDS = {
-        #     "MEAN_MOTION": 1,
-        #     # "ECCENTRICITY": 0.0001,
-        #     "INCLINATION": 3,
-        #     "RA_OF_ASC_NODE": 3,
-        #     "ARG_OF_PERICENTER": 3,
-        #     "MEAN_ANOMALY": 3
-        # }
-        # for satellite in self.SATELLITES:
-        #     found_orbit = False
-        #     for orbit in orbits:
-        #         found_orbit = True
-        #         for key, threshold in THRESHOLDS.items():
-        #             if abs(float(satellite[key]) - orbit[key]) > threshold:
-        #                 found_orbit = False
-        #                 break
-        #         if found_orbit:
-        #             orbit["names"].append(satellite["OBJECT_NAME"])
-        #             break # prevents satellites from being added to multiple orbits
-        #     if not found_orbit:
-        #         new_orbit = {"names": [satellite["OBJECT_NAME"]]}
-        #         for key in THRESHOLDS:
-        #             new_orbit[key] = float(satellite[key])
-        #         orbits.append(new_orbit)
+        orbits = []
+        THRESHOLDS = {
+            "MEAN_MOTION": 1, # Revolutions per day
+            "ECCENTRICITY": 0.0001, # How circular the orbit is (0 is a circle)
+            "INCLINATION": 10, # Angle of orbit relative to equator
+            "RA_OF_ASC_NODE": 10, # Angle of orbit from vernal equinox
+            "ARG_OF_PERICENTER": 5, # Angle of orbit from equator to pericenter (closest point to Earth in orbit)
+            # "MEAN_ANOMALY": 5, # Don't think this is needed
+            "ALTITUDE": 2500, # Altitude in m
+        }
+        threshold_times = THRESHOLDS.copy()
+        for satellite_index in range(len(self.SATELLITES)):
+            found_orbit = False
+            for orbit in orbits:
+                found_orbit = True
+                for key, threshold in THRESHOLDS.items():
+                    if abs(float(self.SATELLITES[satellite_index][key]) - orbit[key]) > threshold:
+                        found_orbit = False
+                        threshold_times[key] += 1
+                        break
+                if found_orbit:
+                    orbit["satellites"].append(satellite_index)
+                    for key in THRESHOLDS: # create running average of orbit values
+                        orbit[key] = (orbit[key] * (len(orbit["satellites"]) - 1) + float(self.SATELLITES[satellite_index][key])) / len(orbit["satellites"])
+                    break # prevents satellites from being added to multiple orbits
+            if not found_orbit:
+                new_orbit = {"satellites": [satellite_index]}
+                for key in THRESHOLDS:
+                    new_orbit[key] = float(self.SATELLITES[satellite_index][key])
+                orbits.append(new_orbit)
 
         # Get average number (mean or mode?) of satellites per orbit
         # Determine if any orbits are not proper (e.g. satellites just launched) and remove them
         
-        # self.NUM_ORBS = len(orbits)
-        # print([len(orbit["names"]) for orbit in orbits])
-        # self.NUM_SATS_PER_ORB = statistics.mode([len(orbit["names"]) for orbit in orbits])
+        self.NUM_ORBS = len(orbits)
+        self.NUM_SATS_PER_ORB = statistics.mode([len(orbit["satellites"]) for orbit in orbits])
+        self.ORBITS = orbits
 
-        # Help
-        self.NUM_ORBS = 72
-        self.NUM_SATS_PER_ORB = 20
+        self.NUM_ORBS = self.NUM_SATELLITES - 1
+        self.NUM_SATS_PER_ORB = 1
 
     def generate_tle(self, file_path):
         with open(file_path, "w+") as f_out:
             f_out.write("%d %d\n" % (self.NUM_ORBS, self.NUM_SATS_PER_ORB))
 
             for satellite in self.SATELLITES:
-                f_out.write(self.NICE_NAME + " " + satellite['OBJECT_NAME'][9:] + "\n")
+                f_out.write(satellite["OBJECT_NAME"] + " " + str(satellite["ID"]) + "\n")
                 f_out.write(satellite['TLE_LINE1'] + "\n")
                 f_out.write(satellite['TLE_LINE2'] + "\n")
+
+    def generate_isl(self):
+        # TODO
+        pass

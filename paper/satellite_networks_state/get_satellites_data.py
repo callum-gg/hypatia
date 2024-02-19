@@ -28,7 +28,9 @@ else:
     logged_in = True
 
 def GetSatellitesData(object_name):
+    print("Fetching live satellite positional data")
     if not logged_in:
+        print("Session not valid")
         return
     # Could change to only return necessary data (speed up requests?)
     resp = session.get("https://www.space-track.org/basicspacedata/query/class/gp/OBJECT_NAME/" + object_name + "-%5E")
@@ -56,6 +58,8 @@ def GetSatellitesData(object_name):
         satellites[i]["TLE_LINE1"] = tle_line + str(check_sum % 10)
         lat, lon = wgs84.latlon_of(geocentric)
         satellites[i]["LATITUDE"], satellites[i]["LONGITUDE"] = lat.degrees, lon.degrees
+        satellites[i]["ALTITUDE"] = (float(satellites[i]["APOAPSIS"]) + float(satellites[i]["PERIAPSIS"])) * 500
+        satellites[i]["ID"] = i
 
     # Debug information
     # print("Number of Starlink satellites:", len(satellites))
