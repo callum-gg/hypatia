@@ -33,6 +33,26 @@
                         var altitude = document.createElement("div");
                         altitude.innerHTML = "Altitude: " + satellite_data[i].ALTITUDE;
                         div.appendChild(altitude);
+
+                        var eccentricity = document.createElement("div");
+                        eccentricity.innerHTML = "Eccentricity: " + satellite_data[i].ECCENTRICITY;
+                        div.appendChild(eccentricity);
+
+                        var inclination = document.createElement("div");
+                        inclination.innerHTML = "Inclination: " + satellite_data[i].INCLINATION;
+                        div.appendChild(inclination);
+
+                        var ascnode = document.createElement("div");
+                        ascnode.innerHTML = "Longitude of Ascending Node: " + satellite_data[i].RA_OF_ASC_NODE;
+                        div.appendChild(ascnode);
+
+                        var meanmotion = document.createElement("div");
+                        meanmotion.innerHTML = "Mean Motion: " + satellite_data[i].MEAN_MOTION;
+                        div.appendChild(meanmotion);
+
+                        var pericenter = document.createElement("div");
+                        pericenter.innerHTML = "Argument of Pericenter: " + satellite_data[i].ARG_OF_PERICENTER;
+                        div.appendChild(pericenter);
                         break;
                     }
                 }

@@ -7,7 +7,7 @@ def GenerateSatelliteJavascript(satellites):
             satellites_string += "var satelliteSphere = viewer.entities.add({name : '" + satellites[j]["OBJECT_NAME"] + "', position: Cesium.Cartesian3.fromDegrees(" \
                             + str(satellites[j]["LONGITUDE"]) + ", " \
                             + str(satellites[j]["LATITUDE"]) + ", " + str(
-                (float(satellites[j]["APOAPSIS"]) + float(satellites[j]["PERIAPSIS"])) * 500) + "), " \
+                (satellites[j]["ALTITUDE"])) + "), " \
                             + "ellipsoid : {radii : new Cesium.Cartesian3(30000.0, 30000.0, 30000.0), " \
                             + "material : Cesium.Color.BLACK.withAlpha(1),}});\n"
             
