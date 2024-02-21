@@ -237,7 +237,7 @@ class LiveHelper(ParentHelper):
         self.NUM_SATS_PER_ORB = statistics.mode([len(orbit["satellites"]) for orbit in orbits])
         self.ORBITS = orbits
 
-        self.NUM_ORBS = self.NUM_SATELLITES - 1
+        self.NUM_ORBS = self.NUM_SATELLITES
         self.NUM_SATS_PER_ORB = 1
 
     def generate_tle(self, file_path):
