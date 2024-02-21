@@ -3,13 +3,13 @@ import time
 from get_gs_id import get_gs_id
 
 satellite_network = "starlink_550_isls_none_ground_stations_top_100_algorithm_free_one_only_over_isls"
-gen_data_path = "./paper/satellite_networks_state/gen_data/" + satellite_network + "/"
+gen_data_path = "../../../paper/satellite_networks_state/gen_data/" + satellite_network + "/"
 interval = 100 # interval times in ms
 length = 10 # total time in seconds
 max_num_processes = 4
 
 end_gs = 27
-start_gs = get_gs_id()
+start_gs = get_gs_id(gen_data_path)
 if end_gs == start_gs:
     print("Warning: start and end locations are the same")
 states_path = "dynamic_state" + str(interval) + "ms_for_" + str(length) + "s"
@@ -32,12 +32,12 @@ local_shell.copy_file("templates/template_config_ns3.properties", run_dir + "/co
 
 local_shell.sed_replace_in_file_plain(run_dir + "/config_ns3.properties", "[SATELLITE-NETWORK]", satellite_network)
 local_shell.sed_replace_in_file_plain(run_dir + "/config_ns3.properties", "[DYNAMIC-STATE]", states_path)
-local_shell.sed_replace_in_file_plain(run_dir + "/config_ns3.properties", "[SIMULATION-END-TIME-NS]", length * 1_000_000_000)
-local_shell.sed_replace_in_file_plain(run_dir + "/config_ns3.properties", "[DYNAMIC-STATE-UPDATE-INTERVAL-NS]", interval * 1_000_000)
-local_shell.sed_replace_in_file_plain(run_dir + "/config_ns3.properties", "[ISL-DATA-RATE-MEGABIT-PER-S]", 10.0)
-local_shell.sed_replace_in_file_plain(run_dir + "/config_ns3.properties", "[GSL-DATA-RATE-MEGABIT-PER-S]", 10.0)
-local_shell.sed_replace_in_file_plain(run_dir + "/config_ns3.properties", "[ISL-MAX-QUEUE-SIZE-PKTS]", 100)
-local_shell.sed_replace_in_file_plain(run_dir + "/config_ns3.properties", "[GSL-MAX-QUEUE-SIZE-PKTS]", 100)
+local_shell.sed_replace_in_file_plain(run_dir + "/config_ns3.properties", "[SIMULATION-END-TIME-NS]", str(length * 1_000_000_000))
+local_shell.sed_replace_in_file_plain(run_dir + "/config_ns3.properties", "[DYNAMIC-STATE-UPDATE-INTERVAL-NS]", str(interval * 1_000_000))
+local_shell.sed_replace_in_file_plain(run_dir + "/config_ns3.properties", "[ISL-DATA-RATE-MEGABIT-PER-S]", str(10.0))
+local_shell.sed_replace_in_file_plain(run_dir + "/config_ns3.properties", "[GSL-DATA-RATE-MEGABIT-PER-S]", str(10.0))
+local_shell.sed_replace_in_file_plain(run_dir + "/config_ns3.properties", "[ISL-MAX-QUEUE-SIZE-PKTS]", str(100))
+local_shell.sed_replace_in_file_plain(run_dir + "/config_ns3.properties", "[GSL-MAX-QUEUE-SIZE-PKTS]", str(100))
 
 # schedule.csv
 # local_shell.copy_file("templates/template_tcp_a_b_schedule.csv", run_dir + "/schedule.csv")

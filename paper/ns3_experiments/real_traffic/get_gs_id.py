@@ -3,7 +3,7 @@ import geocoder
 import requests
 import math
 
-def get_gs_id(website="www.barcoo.qld.gov.au"):
+def get_gs_id(sat_folder, website="www.barcoo.qld.gov.au"):
     response = requests.get("https://" + website)
     size = len(response.content) # in bytes
     ip_address = socket.gethostbyname(website)
@@ -16,7 +16,7 @@ def get_gs_id(website="www.barcoo.qld.gov.au"):
 
     # Import GS file
     # Need to ensure the file path is correct
-    gs_file = "./paper/satellite_networks_state/gen_data/starlink_550_isls_none_ground_stations_top_100_algorithm_free_one_only_over_isls/ground_stations.txt"
+    gs_file = sat_folder + "ground_stations.txt"
     with open(gs_file, "r") as file:
         gs_lines = file.read().splitlines()
         for i in range(1, len(gs_lines)):
