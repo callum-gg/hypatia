@@ -1,2 +1,2 @@
-max_gsl_length_m=6910524.5797723597
+max_gsl_length_m=2839441.8997829985
 max_isl_length_m=7929848.0187201574
