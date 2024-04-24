@@ -1,4 +1,19 @@
-def GetGroundStationsData():
+def GetGroundStationsData(file_name="ground_stations_cities_sorted_by_estimated_2025_pop_top_100.basic.txt"):
+    groundstations = []
+    with open(f"./paper/satellite_networks_state/input_data/{file_name}", "r") as file:
+        data = file.readlines()
+        for line in data:
+            line_values = line.split(",")
+            groundstations.append({
+                "ID": int(line_values[0]),
+                "LOCATION": line_values[1],
+                "LATITUDE": float(line_values[2]),
+                "LONGITUDE": float(line_values[3]),
+            })
+    
+        return groundstations
+
+def GetStarlinkGroundStations():
     return [
         # South America
         {"LATITUDE": -12.74832, "LONGITUDE": -38.28305},

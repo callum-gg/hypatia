@@ -191,9 +191,9 @@ class LiveHelper(ParentHelper):
         self.SATELLITES = GetSatellitesData(self.OBJECT_NAME)
         self.NUM_SATELLITES = len(self.SATELLITES)
 
-        SATELLITE_CONE_RADIUS_M = 940700
         EARTH_RADIUS = 6378135.0
         ALTITUDE_M = (float(self.SATELLITES[0]["APOAPSIS"]) + float(self.SATELLITES[0]["PERIAPSIS"])) * 500
+        SATELLITE_CONE_RADIUS_M = ALTITUDE_M / math.tan(math.radians(30.0)) # Elevation angle
 
         self.MAX_GSL_LENGTH_M = math.sqrt(math.pow(SATELLITE_CONE_RADIUS_M, 2) + math.pow(ALTITUDE_M, 2))
         self.MAX_ISL_LENGTH_M = 2 * math.sqrt(math.pow(EARTH_RADIUS + ALTITUDE_M, 2) - math.pow(EARTH_RADIUS + 80000, 2))
