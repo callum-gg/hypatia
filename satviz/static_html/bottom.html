@@ -14,46 +14,62 @@
                 satellite.innerHTML = name;
                 div.appendChild(satellite);
 
-                if (name === "GROUNDSTATION") {return;}
+                if (name.startsWith("GROUNDSTATION")) {
+                    for (let i=0; i<groundstation_data.length; i++) {
+                        if (groundstation_data[i].ID == name.substr(14)) {
+                            var latitude = document.createElement("div");
+                            latitude.innerHTML = "Latitude: " + groundstation_data[i].LATITUDE;
+                            div.appendChild(latitude);
 
-                for (let i=0; i<satellite_data.length; i++) {
-                    if (satellite_data[i].OBJECT_NAME === name) {
-                        var latitude = document.createElement("div");
-                        latitude.innerHTML = "Latitude: " + satellite_data[i].LATITUDE;
-                        div.appendChild(latitude);
+                            var longitude = document.createElement("div");
+                            longitude.innerHTML = "Longitude: " + groundstation_data[i].LONGITUDE;
+                            div.appendChild(longitude);
 
-                        var longitude = document.createElement("div");
-                        longitude.innerHTML = "Longitude: " + satellite_data[i].LONGITUDE;
-                        div.appendChild(longitude);
+                            var name = document.createElement("div");
+                            name.innerHTML = "Location: " + groundstation_data[i].LOCATION;
+                            div.appendChild(name);
+                        }
+                    }
+                } else {
+                    for (let i=0; i<satellite_data.length; i++) {
+                        if (satellite_data[i].OBJECT_NAME === name) {
+                            var latitude = document.createElement("div");
+                            latitude.innerHTML = "Latitude: " + satellite_data[i].LATITUDE;
+                            div.appendChild(latitude);
 
-                        var launch = document.createElement("div");
-                        launch.innerHTML = "Launched: " + satellite_data[i].LAUNCH_DATE;
-                        div.appendChild(launch);
-                        
-                        var altitude = document.createElement("div");
-                        altitude.innerHTML = "Altitude: " + satellite_data[i].ALTITUDE;
-                        div.appendChild(altitude);
+                            var longitude = document.createElement("div");
+                            longitude.innerHTML = "Longitude: " + satellite_data[i].LONGITUDE;
+                            div.appendChild(longitude);
 
-                        var eccentricity = document.createElement("div");
-                        eccentricity.innerHTML = "Eccentricity: " + satellite_data[i].ECCENTRICITY;
-                        div.appendChild(eccentricity);
+                            var launch = document.createElement("div");
+                            launch.innerHTML = "Launched: " + satellite_data[i].LAUNCH_DATE;
+                            div.appendChild(launch);
+                            
+                            var altitude = document.createElement("div");
+                            altitude.innerHTML = "Altitude: " + satellite_data[i].ALTITUDE;
+                            div.appendChild(altitude);
 
-                        var inclination = document.createElement("div");
-                        inclination.innerHTML = "Inclination: " + satellite_data[i].INCLINATION;
-                        div.appendChild(inclination);
+                            var eccentricity = document.createElement("div");
+                            eccentricity.innerHTML = "Eccentricity: " + satellite_data[i].ECCENTRICITY;
+                            div.appendChild(eccentricity);
 
-                        var ascnode = document.createElement("div");
-                        ascnode.innerHTML = "Longitude of Ascending Node: " + satellite_data[i].RA_OF_ASC_NODE;
-                        div.appendChild(ascnode);
+                            var inclination = document.createElement("div");
+                            inclination.innerHTML = "Inclination: " + satellite_data[i].INCLINATION;
+                            div.appendChild(inclination);
 
-                        var meanmotion = document.createElement("div");
-                        meanmotion.innerHTML = "Mean Motion: " + satellite_data[i].MEAN_MOTION;
-                        div.appendChild(meanmotion);
+                            var ascnode = document.createElement("div");
+                            ascnode.innerHTML = "Longitude of Ascending Node: " + satellite_data[i].RA_OF_ASC_NODE;
+                            div.appendChild(ascnode);
 
-                        var pericenter = document.createElement("div");
-                        pericenter.innerHTML = "Argument of Pericenter: " + satellite_data[i].ARG_OF_PERICENTER;
-                        div.appendChild(pericenter);
-                        break;
+                            var meanmotion = document.createElement("div");
+                            meanmotion.innerHTML = "Mean Motion: " + satellite_data[i].MEAN_MOTION;
+                            div.appendChild(meanmotion);
+
+                            var pericenter = document.createElement("div");
+                            pericenter.innerHTML = "Argument of Pericenter: " + satellite_data[i].ARG_OF_PERICENTER;
+                            div.appendChild(pericenter);
+                            break;
+                        }
                     }
                 }
             }

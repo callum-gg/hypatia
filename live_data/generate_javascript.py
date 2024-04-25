@@ -38,12 +38,14 @@ def GenerateSatelliteJavascript(satellites):
 def GenerateGroundStationJavascript(groundstations):
     groundstations_string = ""
     for i in range(0, len(groundstations)):
-        groundstations_string += "var groundstationSphere = viewer.entities.add({name : 'GROUNDSTATION', position: Cesium.Cartesian3.fromDegrees(" \
+        groundstations_string += "var groundstationSphere = viewer.entities.add({name : 'GROUNDSTATION-" + str(groundstations[i]["ID"]) + "', position: Cesium.Cartesian3.fromDegrees(" \
                         + str(groundstations[i]["LONGITUDE"]) + ", " \
                         + str(groundstations[i]["LATITUDE"]) + ", 0), " \
                         + "ellipsoid : {radii : new Cesium.Cartesian3(30000.0, 30000.0, 30000.0), " \
                         + "material : Cesium.Color.RED.withAlpha(1),}});\n"
 
     groundstations_string += "document.getElementById('general-info').children[1].children[1].innerText = '" + str(len(groundstations)) + "';\n"
+
+    groundstations_string += "const groundstation_data = JSON.parse('" + json.dumps(groundstations, ignore_nan=True).replace("'", "\\'") + "');\n"
     
     return groundstations_string
