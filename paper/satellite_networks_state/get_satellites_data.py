@@ -27,20 +27,17 @@ if resp.status_code != 200 or resp.text == "{\"Login\":\"Failed\"}":
 else:
     logged_in = True
 
-def GetSatellitesData(object_name):
+def GetSatellitesData(object_name, filters={}):
     print("Fetching live satellite positional data")
     if not logged_in:
         print("Session not valid")
         return
-    # Filters (can be passed as arguments to function)
-    start_date = "2000-01-01" # YYYY-MM-DD
-    end_date = "now" # YYYY-MM-DD
+    
+    base_url = "https://www.space-track.org/basicspacedata/query/class/gp/"
+    for key in filters:
+        base_url += key + "/" + filters[key] + "/"
 
-    # Could change to only return necessary data (speed up requests?)
-    resp = session.get("https://www.space-track.org/basicspacedata/query/class/gp/LAUNCH_DATE/" \
-        + start_date + "--" \
-        + end_date + "/OBJECT_NAME/" + object_name + "-%5E")
-    # resp = session.get("https://www.space-track.org/basicspacedata/query/class/gp/OBJECT_NAME/" + object_name + "-%5E/limit/100")
+    resp = session.get(base_url + "/OBJECT_NAME/" + object_name + "-%5E")
 
     # Error handling
     satellites = json.loads(resp.text)
@@ -68,7 +65,7 @@ def GetSatellitesData(object_name):
         satellites[i]["ID"] = i
 
     # Debug information
-    # print("Number of Starlink satellites:", len(satellites))
+    # print("Number of satellites:", len(satellites))
     # print("Example Satellite:")
     # print(json.dumps(satellites[0]))
 
@@ -77,7 +74,7 @@ def GetSatellitesData(object_name):
     return satellites
 
 if __name__ == "__main__":
-    GetSatellitesData("STARLINK")
+    GetSatellitesData("ONEWEB")
 
 # Close session
 session.close()

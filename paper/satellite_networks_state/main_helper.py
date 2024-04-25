@@ -183,12 +183,13 @@ class LiveHelper(ParentHelper):
             BASE_NAME,
             NICE_NAME,
             OBJECT_NAME,
+            FILTERS
     ):
         self.BASE_NAME = BASE_NAME
         self.NICE_NAME = NICE_NAME
         self.OBJECT_NAME = OBJECT_NAME
 
-        self.SATELLITES = GetSatellitesData(self.OBJECT_NAME)
+        self.SATELLITES = GetSatellitesData(self.OBJECT_NAME, FILTERS)
         self.NUM_SATELLITES = len(self.SATELLITES)
 
         EARTH_RADIUS = 6378135.0
