@@ -23,9 +23,13 @@
 import sys
 from main_helper import LiveHelper
 
+FILTERS = {
+
+}
+
 def main():
     args = sys.argv[1:]
-    args = ["ONEWEB", "2", "1000", "isls_none", "ground_stations_top_100", "algorithm_free_one_only_over_isls", "1"]
+    args = ["ONEWEB", "200", "50", "isls_none", "ground_stations_top_100", "algorithm_free_one_only_over_isls", "1"]
     if len(args) != 7:
         print("Must supply exactly six arguments")
         print("Usage: python main_live.py [constellation name] [duration (s)] [time step (ms)] "
@@ -39,6 +43,7 @@ def main():
             args[0].lower(),
             args[0].title(),
             args[0].upper(),
+            FILTERS
         )
 
         live_helper.calculate(
