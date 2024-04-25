@@ -1,24 +1,24 @@
 # ns-3 experiments
 
-Given that you have generated the constellation dynamic state data over time in 
+Given that you have generated the constellation dynamic state data over time in
 `satgenpy`, here you can run the ns-3 experiments used in the paper.
 
 ## A to B experiments
 
 **Explanation**
 
-There is communication for three directed pairs presented in the paper. 
-These were chosen from among the 100 ground stations used, which were an 
+There is communication for three directed pairs presented in the paper.
+These were chosen from among the 100 ground stations used, which were an
 input in `satgenpy`:
 
 ```
 satgenpy/data/ground_stations_cities_sorted_by_estimated_2025_pop_top_100.basic.txt
 ```
 
-The Kuiper-610 shell has 34 x 34 = 1156 satellites. Node identifiers start 
-with the satellites, as such the 100 ground stations have node identifiers 
-1156 (incl.) till 1256 (excl.). This similarly applies to Starlink (22 x 72 = 1584) 
-and Telesat (27 x 13 = 351). 
+The Kuiper-610 shell has 34 x 34 = 1156 satellites. Node identifiers start
+with the satellites, as such the 100 ground stations have node identifiers
+1156 (incl.) till 1256 (excl.). This similarly applies to Starlink (22 x 72 = 1584)
+and Telesat (27 x 13 = 351).
 
 The following ground stations are used:
 
@@ -41,7 +41,7 @@ Moscow             21     1156 + 21 = 1177   1584 + 21 = 1605    351 + 21 = 372
 * Istanbul (1170) to Nairobi (1252)
 * Paris (1180) to Moscow (1177)
 
-Additionally, for the Paris to Moscow case, we also have the ground station relay 
+Additionally, for the Paris to Moscow case, we also have the ground station relay
 with Kuiper-610 experiment, which does not use the top 100 ground stations.
 In here, Paris has GID 0 (= 1156 node id) and Moscow has GID 76 (= 1232).
 
@@ -60,13 +60,13 @@ python step_3_generate_plots.py || exit 1
 
 **Explanation**
 
-In this experiment, it is investigated how well the TCP flow is able to make use 
+In this experiment, it is investigated how well the TCP flow is able to make use
 of the available bandwidth, given that there is competing traffic present. One
 specific pair is investigated, Rio de Janeiro (1174) to St. Petersburg (1229).
 Beyond those pairs, a random reciprocal permutation pairing traffic matrix
-is applied to serve as competing "background" traffic.  From the random 
-permutation matrix we remove the pairs which had at any point has the 
-same source or destination satellite as Rio de Janeiro or St. Petersburg 
+is applied to serve as competing "background" traffic.  From the random
+permutation matrix we remove the pairs which had at any point has the
+same source or destination satellite as Rio de Janeiro or St. Petersburg
 to decrease the chance that the first or last hop is immediately the bottleneck.
 
 **Commands**
@@ -97,4 +97,21 @@ cd traffic_matrix_load || exit 1
 python step_1_generate_runs.py || exit 1
 python step_2_run.py || exit 1
 python step_3_generate_plots.py || exit 1
+```
+
+## Real Traffic
+
+Real traffic uses real-world websites to create an A-to-B network trace where A is the location of the website and B is the location of the user. It uses IP addresses to locate each endpoint.
+
+Before running, the following variables need to be correctly set in the script `run_all.py`:
+
+* `satellite_network` - The full name of the folder where the network data is stored (e.g. `starlink_550_isls_none_ground_stations_top_100_algorithm_free_one_only_over_isls`)
+* `interval` - The time, in ms, of the update interval of the data to be used
+* `length` - The legnth of time, in s, of the data to be used
+* `max_num_processes` - Maximum number of processes to run the analysis on
+
+Then run the following command to run the full analysis:
+
+```
+python run_all.py
 ```

@@ -3,12 +3,7 @@ import geocoder
 import requests
 import math
 
-def get_gs_id(sat_folder, website="www.barcoo.qld.gov.au"):
-    response = requests.get("https://" + website)
-    size = len(response.content) # in bytes
-    ip_address = socket.gethostbyname(website)
-    latitude, longitude = geocoder.ip(ip_address).latlng    
-
+def get_closest_gs(sat_folder, latitude, longitude):
     # Get closest groundstation
     closest_gs = None
     closest_dist = 0
@@ -30,5 +25,15 @@ def get_gs_id(sat_folder, website="www.barcoo.qld.gov.au"):
             if closest_gs is None or dist < closest_dist:
                 closest_gs = gs_lines[i]
                 closest_dist = dist
-    
     return closest_gs.split(",")[0]
+
+def get_gs_id(sat_folder, website="www.barcoo.qld.gov.au"):
+    response = requests.get("https://" + website)
+    size = len(response.content) # in bytes
+    ip_address = socket.gethostbyname(website)
+    latitude, longitude = geocoder.ip(ip_address).latlng
+    return get_closest_gs(sat_folder, latitude, longitude), size
+
+def get_own_gs_id(sat_folder):
+    latitude, longitude = geocoder.ip('me').latlng
+    return get_closest_gs(sat_folder, latitude, longitude)

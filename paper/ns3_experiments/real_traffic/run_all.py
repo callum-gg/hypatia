@@ -1,15 +1,17 @@
 import exputil
 import time
-from get_gs_id import get_gs_id
+from get_gs_id import get_gs_id, get_own_gs_id
 
 satellite_network = "starlink_550_isls_none_ground_stations_top_100_algorithm_free_one_only_over_isls"
-gen_data_path = "../../../paper/satellite_networks_state/gen_data/" + satellite_network + "/"
 interval = 100 # interval times in ms
 length = 10 # total time in seconds
 max_num_processes = 4
 
-end_gs = 27
-start_gs = get_gs_id(gen_data_path)
+
+gen_data_path = "../../../paper/satellite_networks_state/gen_data/" + satellite_network + "/"
+
+end_gs = get_own_gs_id(gen_data_path)
+start_gs, payload = get_gs_id(gen_data_path, "barcoo.qld.gov.au")
 if end_gs == start_gs:
     print("Warning: start and end locations are the same")
 states_path = "dynamic_state" + str(interval) + "ms_for_" + str(length) + "s"
