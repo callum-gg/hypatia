@@ -37,7 +37,7 @@ def GetSatellitesData(object_name, filters={}):
     for key in filters:
         base_url += key + "/" + filters[key] + "/"
 
-    resp = session.get(base_url + "/OBJECT_NAME/" + object_name + "-%5E")
+    resp = session.get(base_url + "/OBJECT_NAME/" + object_name + "%5E")
 
     # Error handling
     satellites = json.loads(resp.text)
